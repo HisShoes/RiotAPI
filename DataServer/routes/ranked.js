@@ -1,14 +1,12 @@
 //routes to get data
-
+var express = require('express'),
+    router = express.Router(),
+    helpers = require('../helpers/ranked');
 
 
 //gets summoner information from Riots API then stores it in MongoDB on mlab
-app.post('/pollRiotAPI', function(req, res) {
-    getSummonerByName(req.body.region, req.body.apiKey, req.body.summonerName)
-    .then(function(summoner) {
-        return getLeagueDetailsById(req.body.region, req.body.apiKey, summoner.id);
-    })
-    .then(updateRankedCollection)
+router.post('/pollRiotAPI', function(req, res) {
+    helpers.pollRiot(req.body.region, req.body.apiKey, req.body.summonerName)
     .then(function() {
         res.send({status: 200});
     })
@@ -16,3 +14,6 @@ app.post('/pollRiotAPI', function(req, res) {
         res.send({message: "there's a problem: " + err});
     });
 });
+
+
+module.exports = router;
