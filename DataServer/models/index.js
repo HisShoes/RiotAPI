@@ -2,8 +2,7 @@
 const mongoose = require('mongoose');
 
 //connect to the mongodb of choice
-const envVars = require('../app-env.json');
-const dbconnection = envVars.DB_STRING;
+const dbconnection = require('../app-env.json').DB_STRING;
 mongoose.connect(dbconnection);
 
 //export the ranked model
