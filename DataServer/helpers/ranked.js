@@ -2,7 +2,10 @@ const db = require('../models'),
     request = require('request-promise'),
     cron = require('cron');
 
-const apiKey = require('../app-env.json').API_KEY;
+const   envs = require('../app-env.json'),
+        apiKey = envs.API_KEY,
+        personalUser = envs.USER,
+        personalRegion = envs.REGION;
 
 //first set of function are 'specific purpose' - for use within this file only, so not exported
 //functions are used to fill the model and create a current snapshot
@@ -114,17 +117,15 @@ exports.pollRiot = function(region, apiKey, summonerName) {
 
 //cron job to automatically poll riot for LP updates for HisShoes
 const cronJob = new cron.CronJob('* 10 * * * * *', function() {
-    exports.pollRiot('euw1', apiKey, 'HisShoes')
+    exports.pollRiot(personalRegion, apiKey, personalUser)
     .then(function(){
-        console.log('finished updating HisShoes model automatically');
+        console.log('finished updating '+ personalUser + ' model automatically');
     })
     .catch(function(err) {
         console.log('failed to update automatically: ' + err);
     })
 }, function() {
-    console.log('aa');
 },
-true)
-console.log('job status: ' + cronJob.running);
+true);
 
 module.exports = exports;
