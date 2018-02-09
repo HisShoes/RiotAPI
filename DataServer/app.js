@@ -1,9 +1,7 @@
 //app setup
 const express = require('express'),
     bodyParser = require('body-parser'),
-    app = express(),
-    router = express.Router()
-    request = require('request-promise');
+    app = express();
 
 //app set up
 app.use(bodyParser.json());

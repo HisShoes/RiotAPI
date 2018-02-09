@@ -1,4 +1,5 @@
-const db = require('../models');
+const db = require('../models'),
+    request = require('request-promise');
 
 //first set of function are 'specific purpose' - for use within this file only, so not exported
 //functions are used to fill the model and create a current snapshot

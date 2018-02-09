@@ -1,7 +1,7 @@
 {
-  "name": "node-practice",
+  "name": "riotapi-data-server",
   "version": "1.0.0",
-  "description": "practice integrations with APIs",
+  "description": "lp tracking node app, integrates with riot API",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
