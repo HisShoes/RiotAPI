@@ -21,6 +21,6 @@ The app-env.json file should follow the format:
 {
     "DB_STRING": "mongodb://<<DB_USER_NAME>>:<<DB_PASSWORD>>@<<DATABASE>>",
 	"API_KEY": "<<API_KEY_FROM_RIOT>>",
-    "USER": "<<YOUR_USERNAME>>",
+    "USERS": ["<<USERNAME1>>", "<<USERNAME2>>"...],
     "REGION": "<<REGION>>"
 }

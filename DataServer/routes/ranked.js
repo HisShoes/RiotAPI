@@ -15,5 +15,7 @@ router.post('/pollRiotAPI', function(req, res) {
     });
 });
 
+router.get('/snapshots/:username/:queue', helpers.getSnapshots);
+
 
 module.exports = router;

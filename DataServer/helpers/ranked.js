@@ -4,7 +4,7 @@ const db = require('../models'),
 
 const   envs = require('../app-env.json'),
         apiKey = envs.API_KEY,
-        personalUser = envs.USER,
+        personalUsers = envs.USERS,
         personalRegion = envs.REGION;
 
 //first set of function are 'specific purpose' - for use within this file only, so not exported
@@ -68,14 +68,11 @@ updateRankedCollection = function(league) {
                 console.log('error:' + err);
             }else {
                 if(record) {
-                    console.log("check update")
                     if(record.snapshots[record.snapshots.length-1].wins !== queue.wins || record.snapshots[record.snapshots.length-1].losses !== queue.losses) {
-                        console.log("do update")
                         record.snapshots.push(mappedObject.snapshots[0]);
                         record.save();
                     }
                 } else {
-                    console.log("create")
                     db.Ranked.create(mappedObject);
                 }
             }
@@ -115,14 +112,34 @@ exports.pollRiot = function(region, apiKey, summonerName) {
     .then(updateRankedCollection)
 }
 
+
+/*
+    queueType should be either:
+    RANKED_SOLO_5x5
+    RANKED_FLEX_SR
+*/
+exports.getSnapshots = function(req, res) {
+    db.Ranked.findOne({"queueType": req.params.queue, "playerOrTeamName": req.params.username}, function(err, record) {
+        if(err) {
+            console.log('error:' + err);
+            res.send(err)
+        }else {
+            console.log("found")
+            res.json(record);
+        }
+    })
+}
+
 //cron job to automatically poll riot for LP updates for HisShoes
 const cronJob = new cron.CronJob('* 10 * * * * *', function() {
-    exports.pollRiot(personalRegion, apiKey, personalUser)
-    .then(function(){
-        console.log('finished updating '+ personalUser + ' model automatically');
-    })
-    .catch(function(err) {
-        console.log('failed to update automatically: ' + err);
+    personalUsers.forEach(function(personalUser){
+        exports.pollRiot(personalRegion, apiKey, personalUser)
+        .then(function(){
+            console.log('finished updating '+ personalUser + ' model automatically');
+        })
+        .catch(function(err) {
+            console.log('failed to update automatically: ' + err);
+        })
     })
 }, function() {
 },
