@@ -121,21 +121,19 @@ exports.pollRiot = function(region, apiKey, summonerName) {
 exports.getSnapshots = function(req, res) {
     db.Ranked.findOne({"queueType": req.params.queue, "playerOrTeamName": req.params.username}, function(err, record) {
         if(err) {
-            console.log('error:' + err);
             res.send(err)
         }else {
-            console.log("found")
             res.json(record);
         }
     })
 }
 
 //cron job to automatically poll riot for LP updates for HisShoes
-const cronJob = new cron.CronJob('* 10 * * * * *', function() {
+const cronJob = new cron.CronJob('0 */10 * * * *', function() {
     personalUsers.forEach(function(personalUser){
         exports.pollRiot(personalRegion, apiKey, personalUser)
         .then(function(){
-            console.log('finished updating '+ personalUser + ' model automatically');
+            console.log('finished updating '+ personalUser + ' model automatically ' + new Date().toLocaleTimeString());
         })
         .catch(function(err) {
             console.log('failed to update automatically: ' + err);
